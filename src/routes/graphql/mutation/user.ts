@@ -12,19 +12,8 @@ export const userMutationType = {
             dto: { type: new GraphQLNonNull(CreateUserInputType) }
         },
         resolve: async (_parent: unknown, args: CreateUserType, context: Context)=> {
-            const { name, balance } = args.dto
-
-            if (!name || !balance) {
-                throw new Error("There are 2 required fields: { name, balance }.")
-            }
-
             try {
-                const user: Pick<User, 'name' | 'balance'> = {
-                    name,
-                    balance,
-                };
-                await context.prisma.user.create({ data: user})
-                return user
+                return await context.prisma.user.create({ data: args.dto})
             } catch (e) {
                 throw new Error("User was nor created")
             }
@@ -37,21 +26,10 @@ export const userMutationType = {
             dto: { type: new GraphQLNonNull(ChangeUserInputType)}
         },
         resolve: async (_parent: unknown, args: ChangeUserType, context: Context)=> {
-            const { name, balance } = args.dto
-
-            if (!name || !balance || !args.id)  {
-                throw new Error("There are 3 required fields: { name, balance }, id")
-            }
-
             try {
-                const user: Pick<User, 'name' | 'balance'> = {
-                    name,
-                    balance,
-                };
-
-               return await context.prisma.user.update({
+                  return await context.prisma.user.update({
                     where: { id: args.id },
-                    data: user
+                    data: args.dto
                 })
             } catch (e) {
                 throw new Error( "User was not updated")
@@ -64,10 +42,6 @@ export const userMutationType = {
             id: { type: new GraphQLNonNull(UUIDType) },
         },
         resolve: async (_parent: unknown,  args: DeleteUserType, context: Context) => {
-            if (!args.id) {
-                throw new Error( 'There is 1 required field - id.')
-            }
-
             try {
                 await context.prisma.user.delete({ where: { id: args.id } })
                 return "User successfully deleted"

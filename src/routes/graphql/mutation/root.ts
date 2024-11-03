@@ -12,6 +12,6 @@ export const rootMutationType = new GraphQLObjectType({
         ...userMutationType,
         ...profileMutationType,
         ...postMutationType,
-        ...subscribeMutationType
+        ...subscribeMutationType,
     })
 });

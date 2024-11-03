@@ -22,9 +22,9 @@ export const ChangeProfileInputType = new GraphQLInputObjectType({
     name: "ChangeProfileInput",
     description: "Change a existing profile",
     fields: {
-        isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
-        yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
-        memberTypeId: { type: new GraphQLNonNull(MemberTypeIdEnum) },
+        isMale: { type: GraphQLBoolean },
+        yearOfBirth: { type: GraphQLInt },
+        memberTypeId: { type: MemberTypeIdEnum },
     }
 })
 
