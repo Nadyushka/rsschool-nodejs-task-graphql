@@ -1,6 +1,3 @@
-import { Prisma, PrismaClient } from "@prisma/client";
-import { DefaultArgs } from "@prisma/client/runtime/library.js";
+import { PrismaClient } from "@prisma/client";
 
-export type Context = {
-    prisma: PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>
-}
+export type Context = { prisma: PrismaClient }

@@ -11,17 +11,11 @@ export const subscribeMutationType = {
             authorId: { type: new GraphQLNonNull(UUIDType)  }
         },
         resolve: async (_parent: unknown, args: Subscription, context: Context)=> {
-            const {userId, authorId} = args
-
-            if (!userId || !authorId) {
-                return "There are 2 required fields: userId, authorId."
-            }
-
-            try {
+             try {
                 await context.prisma.subscribersOnAuthors.create({
                     data: {
-                        subscriberId: userId,
-                        authorId: authorId,
+                        subscriberId: args.userId,
+                        authorId: args.authorId,
                     },
                 });
 
@@ -38,18 +32,12 @@ export const subscribeMutationType = {
             authorId: { type: new GraphQLNonNull(UUIDType)  }
         },
         resolve: async (_parent: unknown, args: Subscription,  context: Context)=> {
-            const {userId, authorId} = args
-
-            if (!userId || !authorId) {
-                return "There are 2 required fields: userId, authorId."
-            }
-
             try {
                 await context.prisma.subscribersOnAuthors.delete({
                     where: {
                         subscriberId_authorId: {
-                            subscriberId: userId,
-                            authorId: authorId,
+                            subscriberId: args.userId,
+                            authorId: args.authorId,
                         },
                     },
                 });

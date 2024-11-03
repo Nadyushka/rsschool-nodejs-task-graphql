@@ -18,8 +18,8 @@ export const ChangePostInputType = new GraphQLInputObjectType({
     name: "ChangePostInput",
     description: "Change a existing post",
     fields: {
-        title: { type: new GraphQLNonNull(GraphQLString) },
-        content: { type: new GraphQLNonNull(GraphQLString) }
+        title: { type: GraphQLString },
+        content: { type: GraphQLString }
     }
 })
 
@@ -30,7 +30,6 @@ export type CreatePostType =  {
         authorId: UUID
     }
 }
-
 
 export type ChangePostType = {
     id: UUID,
