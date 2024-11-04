@@ -15,43 +15,27 @@ export const UserType = new GraphQLObjectType({
         posts: {
             type: new GraphQLList(PostType),
             resolve: async (obj: User, _args, context: Context) => {
-                return await context.prisma.post.findMany({ where: { authorId: obj.id } })
+                return context.postsByAuthorLoader.load(obj.id);
             }
         },
         profile: {
             type: ProfileType,
             resolve: async (obj: User, _args, context: Context) => {
-                return await context.prisma.profile.findUnique({ where: { userId: obj.id } })
+                return context.profileByUserIdLoader.load(obj.id);
             }
         },
         subscribedToUser: {
             type: new GraphQLList(UserType),
-            resolve: async (obj: User, _args, context: Context) => {
-                return context.prisma.user.findMany(
-                    {
-                        where: {
-                            userSubscribedTo: {
-                                some: {
-                                    authorId: obj.id
-                                }
-                            }
-                        }
-                    });
+            resolve: async (obj: any, _args, context: Context) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return obj.subscribedToUser.map((subscribtion) => context.userLoader.load(subscribtion.subscriberId));
             }
         },
         userSubscribedTo: {
             type: new GraphQLList(UserType),
-            resolve: async (obj: User, _args, context: Context) => {
-                return context.prisma.user.findMany(
-                    {
-                        where: {
-                                subscribedToUser: {
-                                    some: {
-                                         subscriberId: obj.id
-                                    }
-                                }
-                        }
-                    });
+            resolve: async (obj: any, _args, context: Context) => {
+                // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+                return obj.userSubscribedTo.map((subscribtion) => context.userLoader.load(subscribtion.authorId));
             }
         }
 
