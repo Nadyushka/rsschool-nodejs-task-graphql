@@ -7,7 +7,12 @@ export const profileQueryType = {
     profiles: {
         type: new GraphQLList(ProfileType),
         resolve: async (_parent, _args, context: Context) => {
-            return await context.prisma.profile.findMany()
+            const profiles = await context.prisma.profile.findMany();
+            profiles.forEach((profile) => {
+                context.profileByIdLoader.prime(profile.id, profile);
+            });
+
+            return profiles;
         }
     },
     profile: {
@@ -16,7 +21,7 @@ export const profileQueryType = {
             id: { type: new GraphQLNonNull(UUIDType) },
         },
         resolve: async (_parent, args: { id: string }, context: Context) => {
-            return await context.prisma.profile.findUnique({ where: { id: args.id } })
+            return context.profileByIdLoader.load(args.id);
         }
     }
 }
